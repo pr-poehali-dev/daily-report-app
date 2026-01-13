@@ -1,0 +1,45 @@
+{
+  "tests": [
+    {
+      "name": "Get reports list",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "reports": "array"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Get statistics",
+      "method": "GET",
+      "path": "/?action=stats",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "total_reports": "number",
+        "avg_hours": "number"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Create new report",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "title": "Test Report",
+        "tasks": "Testing backend integration",
+        "achievements": "Backend works",
+        "plans": "Connect frontend",
+        "hours": 8
+      },
+      "expectedStatus": 201,
+      "expectedBody": {
+        "report": {
+          "id": "number",
+          "title": "string"
+        }
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}
