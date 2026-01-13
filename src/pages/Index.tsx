@@ -20,6 +20,7 @@ interface Report {
   plans: string;
   hours: number;
   driver_name?: string;
+  vehicle_number?: string;
   loading_place?: string;
   unloading_place?: string;
   material_name?: string;
@@ -55,6 +56,7 @@ const Index = () => {
     date: new Date().toISOString().split('T')[0],
     title: '',
     driver_name: '',
+    vehicle_number: '',
     loading_place: '',
     unloading_place: '',
     material_name: '',
@@ -83,6 +85,7 @@ const Index = () => {
       date: new Date().toISOString().split('T')[0],
       title: '',
       driver_name: '',
+      vehicle_number: '',
       loading_place: '',
       unloading_place: '',
       material_name: '',
@@ -183,6 +186,19 @@ const Index = () => {
                       className="text-base"
                     />
                   </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="vehicle_number" className="text-base font-medium">
+                    Номер Т/С
+                  </Label>
+                  <Input
+                    id="vehicle_number"
+                    placeholder="А123БВ777"
+                    value={newReport.vehicle_number}
+                    onChange={(e) => setNewReport({ ...newReport, vehicle_number: e.target.value })}
+                    className="text-base"
+                  />
                 </div>
 
                 <div className="space-y-2">
@@ -394,18 +410,27 @@ const Index = () => {
                           </div>
                         </CardHeader>
                         <CardContent className="space-y-3 text-sm">
-                          {report.driver_name && (
+                          {(report.driver_name || report.vehicle_number) && (
                             <div className="grid grid-cols-2 gap-3">
-                              <div>
-                                <p className="font-medium text-muted-foreground mb-1">Водитель:</p>
-                                <p className="text-foreground">{report.driver_name}</p>
-                              </div>
-                              {report.trips_count && (
+                              {report.driver_name && (
                                 <div>
-                                  <p className="font-medium text-muted-foreground mb-1">Рейсов:</p>
-                                  <p className="text-foreground">{report.trips_count}</p>
+                                  <p className="font-medium text-muted-foreground mb-1">Водитель:</p>
+                                  <p className="text-foreground">{report.driver_name}</p>
                                 </div>
                               )}
+                              {report.vehicle_number && (
+                                <div>
+                                  <p className="font-medium text-muted-foreground mb-1">Номер Т/С:</p>
+                                  <p className="text-foreground">{report.vehicle_number}</p>
+                                </div>
+                              )}
+                            </div>
+                          )}
+
+                          {report.trips_count && (
+                            <div>
+                              <p className="font-medium text-muted-foreground mb-1">Количество рейсов:</p>
+                              <p className="text-foreground">{report.trips_count}</p>
                             </div>
                           )}
                           
