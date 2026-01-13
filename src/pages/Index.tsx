@@ -19,6 +19,13 @@ interface Report {
   achievements: string;
   plans: string;
   hours: number;
+  driver_name?: string;
+  loading_place?: string;
+  unloading_place?: string;
+  material_name?: string;
+  weight?: number;
+  trips_count?: number;
+  mileage?: number;
 }
 
 const Index = () => {
@@ -45,7 +52,15 @@ const Index = () => {
   ]);
 
   const [newReport, setNewReport] = useState({
+    date: new Date().toISOString().split('T')[0],
     title: '',
+    driver_name: '',
+    loading_place: '',
+    unloading_place: '',
+    material_name: '',
+    weight: 0,
+    trips_count: 0,
+    mileage: 0,
     tasks: '',
     achievements: '',
     plans: '',
@@ -65,7 +80,15 @@ const Index = () => {
 
     setReports([report, ...reports]);
     setNewReport({
+      date: new Date().toISOString().split('T')[0],
       title: '',
+      driver_name: '',
+      loading_place: '',
+      unloading_place: '',
+      material_name: '',
+      weight: 0,
+      trips_count: 0,
+      mileage: 0,
       tasks: '',
       achievements: '',
       plans: '',
@@ -134,6 +157,34 @@ const Index = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="date" className="text-base font-medium">
+                      Дата
+                    </Label>
+                    <Input
+                      id="date"
+                      type="date"
+                      value={newReport.date}
+                      onChange={(e) => setNewReport({ ...newReport, date: e.target.value })}
+                      className="text-base"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="driver_name" className="text-base font-medium">
+                      ФИО водителя
+                    </Label>
+                    <Input
+                      id="driver_name"
+                      placeholder="Иванов Иван Иванович"
+                      value={newReport.driver_name}
+                      onChange={(e) => setNewReport({ ...newReport, driver_name: e.target.value })}
+                      className="text-base"
+                    />
+                  </div>
+                </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="title" className="text-base font-medium">
                     Заголовок отчёта
@@ -147,6 +198,96 @@ const Index = () => {
                   />
                 </div>
 
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="loading_place" className="text-base font-medium">
+                      Место погрузки
+                    </Label>
+                    <Input
+                      id="loading_place"
+                      placeholder="Склад №1, г. Москва"
+                      value={newReport.loading_place}
+                      onChange={(e) => setNewReport({ ...newReport, loading_place: e.target.value })}
+                      className="text-base"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="unloading_place" className="text-base font-medium">
+                      Место выгрузки
+                    </Label>
+                    <Input
+                      id="unloading_place"
+                      placeholder="Объект №5, г. Санкт-Петербург"
+                      value={newReport.unloading_place}
+                      onChange={(e) => setNewReport({ ...newReport, unloading_place: e.target.value })}
+                      className="text-base"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="material_name" className="text-base font-medium">
+                    Наименование материала
+                  </Label>
+                  <Input
+                    id="material_name"
+                    placeholder="Щебень гранитный фракция 5-20"
+                    value={newReport.material_name}
+                    onChange={(e) => setNewReport({ ...newReport, material_name: e.target.value })}
+                    className="text-base"
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="weight" className="text-base font-medium">
+                      Вес (тонн)
+                    </Label>
+                    <Input
+                      id="weight"
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      placeholder="15.5"
+                      value={newReport.weight}
+                      onChange={(e) => setNewReport({ ...newReport, weight: parseFloat(e.target.value) || 0 })}
+                      className="text-base"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="trips_count" className="text-base font-medium">
+                      Количество рейсов
+                    </Label>
+                    <Input
+                      id="trips_count"
+                      type="number"
+                      min="0"
+                      placeholder="3"
+                      value={newReport.trips_count}
+                      onChange={(e) => setNewReport({ ...newReport, trips_count: parseInt(e.target.value) || 0 })}
+                      className="text-base"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="mileage" className="text-base font-medium">
+                      Километраж (км)
+                    </Label>
+                    <Input
+                      id="mileage"
+                      type="number"
+                      step="0.1"
+                      min="0"
+                      placeholder="250.5"
+                      value={newReport.mileage}
+                      onChange={(e) => setNewReport({ ...newReport, mileage: parseFloat(e.target.value) || 0 })}
+                      className="text-base"
+                    />
+                  </div>
+                </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="tasks" className="text-base font-medium">
                     Выполненные задачи
@@ -156,7 +297,7 @@ const Index = () => {
                     placeholder="Опишите задачи, над которыми работали..."
                     value={newReport.tasks}
                     onChange={(e) => setNewReport({ ...newReport, tasks: e.target.value })}
-                    rows={4}
+                    rows={3}
                     className="text-base resize-none"
                   />
                 </div>
@@ -170,7 +311,7 @@ const Index = () => {
                     placeholder="Что удалось достичь..."
                     value={newReport.achievements}
                     onChange={(e) => setNewReport({ ...newReport, achievements: e.target.value })}
-                    rows={3}
+                    rows={2}
                     className="text-base resize-none"
                   />
                 </div>
@@ -184,7 +325,7 @@ const Index = () => {
                     placeholder="Что планируете сделать завтра..."
                     value={newReport.plans}
                     onChange={(e) => setNewReport({ ...newReport, plans: e.target.value })}
-                    rows={3}
+                    rows={2}
                     className="text-base resize-none"
                   />
                 </div>
@@ -253,6 +394,62 @@ const Index = () => {
                           </div>
                         </CardHeader>
                         <CardContent className="space-y-3 text-sm">
+                          {report.driver_name && (
+                            <div className="grid grid-cols-2 gap-3">
+                              <div>
+                                <p className="font-medium text-muted-foreground mb-1">Водитель:</p>
+                                <p className="text-foreground">{report.driver_name}</p>
+                              </div>
+                              {report.trips_count && (
+                                <div>
+                                  <p className="font-medium text-muted-foreground mb-1">Рейсов:</p>
+                                  <p className="text-foreground">{report.trips_count}</p>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                          
+                          {(report.loading_place || report.unloading_place) && (
+                            <div className="grid grid-cols-2 gap-3">
+                              {report.loading_place && (
+                                <div>
+                                  <p className="font-medium text-muted-foreground mb-1">Погрузка:</p>
+                                  <p className="text-foreground">{report.loading_place}</p>
+                                </div>
+                              )}
+                              {report.unloading_place && (
+                                <div>
+                                  <p className="font-medium text-muted-foreground mb-1">Выгрузка:</p>
+                                  <p className="text-foreground">{report.unloading_place}</p>
+                                </div>
+                              )}
+                            </div>
+                          )}
+
+                          {report.material_name && (
+                            <div>
+                              <p className="font-medium text-muted-foreground mb-1">Материал:</p>
+                              <p className="text-foreground">{report.material_name}</p>
+                            </div>
+                          )}
+
+                          {(report.weight || report.mileage) && (
+                            <div className="grid grid-cols-2 gap-3">
+                              {report.weight && (
+                                <div>
+                                  <p className="font-medium text-muted-foreground mb-1">Вес:</p>
+                                  <p className="text-foreground">{report.weight} т</p>
+                                </div>
+                              )}
+                              {report.mileage && (
+                                <div>
+                                  <p className="font-medium text-muted-foreground mb-1">Километраж:</p>
+                                  <p className="text-foreground">{report.mileage} км</p>
+                                </div>
+                              )}
+                            </div>
+                          )}
+
                           <div>
                             <p className="font-medium text-muted-foreground mb-1">Задачи:</p>
                             <p className="text-foreground">{report.tasks}</p>

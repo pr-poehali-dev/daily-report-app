@@ -69,7 +69,9 @@ def handler(event: dict, context) -> dict:
                 offset = int(query_params.get('offset', 0))
                 
                 cursor.execute('''
-                    SELECT id, user_id, date, title, tasks, achievements, plans, hours, created_at
+                    SELECT id, user_id, date, title, tasks, achievements, plans, hours, 
+                           driver_name, loading_place, unloading_place, material_name, 
+                           weight, trips_count, mileage, created_at
                     FROM t_p82812282_daily_report_app.reports
                     WHERE user_id = %s
                     ORDER BY date DESC, created_at DESC
@@ -101,6 +103,14 @@ def handler(event: dict, context) -> dict:
             hours = int(body.get('hours', 8))
             date = body.get('date', datetime.now().strftime('%Y-%m-%d'))
             
+            driver_name = body.get('driver_name', '').strip() or None
+            loading_place = body.get('loading_place', '').strip() or None
+            unloading_place = body.get('unloading_place', '').strip() or None
+            material_name = body.get('material_name', '').strip() or None
+            weight = body.get('weight') or None
+            trips_count = body.get('trips_count') or None
+            mileage = body.get('mileage') or None
+            
             if not title or not tasks:
                 cursor.close()
                 conn.close()
@@ -116,10 +126,16 @@ def handler(event: dict, context) -> dict:
             
             cursor.execute('''
                 INSERT INTO t_p82812282_daily_report_app.reports 
-                (user_id, date, title, tasks, achievements, plans, hours)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
-                RETURNING id, user_id, date, title, tasks, achievements, plans, hours, created_at
-            ''', (user_id, date, title, tasks, achievements, plans, hours))
+                (user_id, date, title, tasks, achievements, plans, hours,
+                 driver_name, loading_place, unloading_place, material_name,
+                 weight, trips_count, mileage)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                RETURNING id, user_id, date, title, tasks, achievements, plans, hours,
+                          driver_name, loading_place, unloading_place, material_name,
+                          weight, trips_count, mileage, created_at
+            ''', (user_id, date, title, tasks, achievements, plans, hours,
+                  driver_name, loading_place, unloading_place, material_name,
+                  weight, trips_count, mileage))
             
             new_report = dict(cursor.fetchone())
             conn.commit()
